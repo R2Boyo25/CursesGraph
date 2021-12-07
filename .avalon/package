@@ -1,0 +1,6 @@
+{
+    "installScript": ".avalon/install.sh",
+    "uninstallScript": ".avalon/uninstall.sh",
+    "author": "R2Boyo25",
+    "repo": "CursesGraph"
+}
