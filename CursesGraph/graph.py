@@ -1,9 +1,6 @@
 import curses
 from .point import Point
 
-def windowSize(wind):
-    return wind.getmaxyx()[1], wind.getmaxyx()[0]
-
 class PointGraph:
     def __init__(self, 
             wind : "Window to draw to", 
@@ -101,8 +98,8 @@ class PointGraph:
     def draw(self, 
             l : "Whether to fill in under points" = True):
         self.wind.erase()
-        mx, my = windowSize(self.wind)
-        self.wdim = windowSize(self.wind)
+        my, mx = self.wind.getmaxyx()
+        self.wdim = (mx, my)
 
         for point in self.points:
             self.drawPoint(point, self.points, (mx, my), l)
