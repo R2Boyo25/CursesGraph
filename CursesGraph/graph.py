@@ -48,7 +48,7 @@ class PointGraph:
         except ZeroDivisionError:
             return 0
 
-    def drawPoint(self, 
+    def _drawPoint(self, 
             point : "Point", 
             points : "Points List", 
             wd : "Window Dimensions", 
@@ -102,6 +102,6 @@ class PointGraph:
         self.wdim = (mx, my)
 
         for point in self.points:
-            self.drawPoint(point, self.points, (mx, my), l)
+            self._drawPoint(point, self.points, (mx, my), l)
 
         self.wind.refresh()
