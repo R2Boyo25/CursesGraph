@@ -5,12 +5,16 @@ def windowSize(wind):
     return wind.getmaxyx()[1], wind.getmaxyx()[0]
 
 class PointGraph:
-    def __init__(self, wind, points = None):
-        self.wind = wind # Window to draw to
-        self.points = points if points else []
+    def __init__(self, 
+            wind : "Window to draw to", 
+            points : "Points list (List of Point objects)" = []):
+        self.wind = wind
+        self.points = points
         self.wdim = (10, 10)
 
-    def _getMax(self, points, axis = "y"):
+    def _getMax(self, 
+            points : "Points List", 
+            axis : "Axis to get, x or y" = "y"):
         curmax = 0
 
         for point in points:
@@ -19,7 +23,9 @@ class PointGraph:
             
         return curmax
     
-    def _getMin(self, points, axis = "y"):
+    def _getMin(self, 
+            points : "Points List", 
+            axis : "Axis to get, x or y" = "y"):
         curmin = 0
 
         for point in points:
@@ -28,14 +34,16 @@ class PointGraph:
             
         return curmin
 
-    def _rng(self, points, axis = "y"):
+    def _rng(self, 
+            points : "Points List", 
+            axis : "Axis to get, x or y" = "y"):
         return abs(self._getMax(points, axis) - self._getMin(points, axis))
 
-    def _fit(self, num, wd, mn, mx):
-        # num = number
-        # wd = window dimension
-        # mn = max of range
-        # mx = min of range
+    def _fit(self, 
+            num : "Number to fit", 
+            wd : "Window dimension for axis", 
+            mn : "Max of range", 
+            mx : "Min of range"):
 
         # formula from https://stats.stackexchange.com/a/281164
         try:
@@ -43,7 +51,11 @@ class PointGraph:
         except ZeroDivisionError:
             return 0
 
-    def drawPoint(self, point, points, wd, l = True):
+    def drawPoint(self, 
+            point : "Point", 
+            points : "Points List", 
+            wd : "Window Dimensions", 
+            l : "Whether to draw under the line" = True):
         wx, wy = wd
 
         x = self._fit(point.x, wx, self._getMax(points, 'x'), self._getMin(points, 'x'))
@@ -72,7 +84,9 @@ class PointGraph:
     def addPoint(self, x, y):
         self.points.append(Point(x, y))
 
-    def increment(self, amt = 1, crop = True):
+    def increment(self, 
+            amt : "Amount to increment by" = 1, 
+            crop : "Whether to remove points that go off the screen's X axis" = True):
 
         for i, point in enumerate(self.points):
 
@@ -84,7 +98,8 @@ class PointGraph:
 
                     del self.points[i]
 
-    def draw(self, l = True):
+    def draw(self, 
+            l : "Whether to fill in under points" = True):
         self.wind.erase()
         mx, my = windowSize(self.wind)
         self.wdim = windowSize(self.wind)
