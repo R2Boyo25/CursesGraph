@@ -38,10 +38,12 @@ class PointGraph:
         # mx = min of range
 
         # formula from https://stats.stackexchange.com/a/281164
+        try:
+            return round(((( num - mn ) / ( mx - mn ))) * wd)
+        except ZeroDivisionError:
+            return 0
 
-        return round(((( num - mn ) / ( mx - mn ))) * wd)
-
-    def drawPoint(self, point, points, wd):
+    def drawPoint(self, point, points, wd, l = True):
         wx, wy = wd
 
         x = self._fit(point.x, wx, self._getMax(points, 'x'), self._getMin(points, 'x'))
@@ -53,9 +55,15 @@ class PointGraph:
         if x > wx:
             point.rem = True
 
-        for i in range(y + 1):
+        if l:
+            for i in range(y + 1):
+                try:
+                    self.wind.addch(wy - i, wx - x, curses.ACS_BLOCK)
+                except Exception:
+                    pass
+        else:
             try:
-                self.wind.addch(wy - i, wx - x, curses.ACS_BLOCK)
+                self.wind.addch(wy - y, wx - x, curses.ACS_BLOCK)
             except Exception:
                 pass
 
@@ -65,30 +73,23 @@ class PointGraph:
         self.points.append(Point(x, y))
 
     def increment(self, amt = 1, crop = True):
-        npoints = []
 
-        for point in self.points:
+        for i, point in enumerate(self.points):
 
             point.x = point.x + amt
 
             if crop:
 
-                if not point.x > self.wdim[0]:
+                if point.x > self.wdim[0]:
 
-                    npoints.append(point)
-            
-            else:
+                    del self.points[i]
 
-                npoints.append(point)
-
-        self.points = npoints
-
-    def draw(self):
+    def draw(self, l = True):
         self.wind.erase()
         mx, my = windowSize(self.wind)
         self.wdim = windowSize(self.wind)
 
         for point in self.points:
-            self.drawPoint(point, self.points, (mx, my))
+            self.drawPoint(point, self.points, (mx, my), l)
 
         self.wind.refresh()
