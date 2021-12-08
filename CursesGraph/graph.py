@@ -2,6 +2,8 @@ import curses
 from .point import Point
 
 class PointGraph:
+    "Graph a list of Point objects"
+
     def __init__(self, 
             wind : "Window to draw to", 
             points : "Points list (List of Point objects)" = []):
@@ -12,6 +14,7 @@ class PointGraph:
     def _getMax(self, 
             points : "Points List", 
             axis : "Axis to get, x or y" = "y"):
+        "Get max of list of points on axis axis"
         curmax = 0
 
         for point in points:
@@ -23,6 +26,7 @@ class PointGraph:
     def _getMin(self, 
             points : "Points List", 
             axis : "Axis to get, x or y" = "y"):
+        "Get min of list of points on axis axis"
         curmin = 0
 
         for point in points:
@@ -34,6 +38,7 @@ class PointGraph:
     def _rng(self, 
             points : "Points List", 
             axis : "Axis to get, x or y" = "y"):
+        "Get the absolute value of the range of points"
         return abs(self._getMax(points, axis) - self._getMin(points, axis))
 
     def _fit(self, 
@@ -41,6 +46,7 @@ class PointGraph:
             wd : "Window dimension for axis", 
             mn : "Max of range", 
             mx : "Min of range"):
+        "Fit the number to the window"
 
         # formula from https://stats.stackexchange.com/a/281164
         try:
@@ -53,6 +59,7 @@ class PointGraph:
             points : "Points List", 
             wd : "Window Dimensions", 
             l : "Whether to draw under the line" = True):
+        "Draw the point to the window"
         wx, wy = wd
 
         x = self._fit(point.x, wx, self._getMax(points, 'x'), self._getMin(points, 'x'))
@@ -79,11 +86,13 @@ class PointGraph:
         return wy - y, wx - x
 
     def addPoint(self, x, y):
+        "Create and add a point object to the points list"
         self.points.append(Point(x, y))
 
     def increment(self, 
             amt : "Amount to increment by" = 1, 
-            crop : "Whether to remove points that go off the screen's X axis" = True):
+            crop : "Whether to remove points that go off the windows's X axis" = True):
+        "Increment all point's x value by amt, and remove points that go off the window (if crop is true)"
 
         for i, point in enumerate(self.points):
 
@@ -97,6 +106,7 @@ class PointGraph:
 
     def draw(self, 
             l : "Whether to fill in under points" = True):
+        "Draw all points to the window"
         self.wind.erase()
         my, mx = self.wind.getmaxyx()
         self.wdim = (mx, my)
