@@ -1,1 +1,1 @@
-from .graph import PointGraph
+from .graph import PointGraph, MaxGraph, MinGraph, NumberGraph, PercentGraph

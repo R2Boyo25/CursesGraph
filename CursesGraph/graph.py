@@ -7,6 +7,9 @@ class PointGraph:
     def __init__(self, 
             wind : "Window to draw to", 
             points : "Points list (List of Point objects)" = []):
+        curses.use_default_colors()
+        for i in range(0, curses.COLORS):
+            curses.init_pair(i, i, -1)
         self.wind = wind
         self.points = points
         self.wdim = (10, 10)
@@ -74,20 +77,20 @@ class PointGraph:
         if l:
             for i in range(y + 1):
                 try:
-                    self.wind.addch(wy - i, wx - x, curses.ACS_BLOCK)
+                    self.wind.addch(wy - i, wx - x, curses.ACS_BLOCK, curses.color_pair(point.color))
                 except Exception:
                     pass
         else:
             try:
-                self.wind.addch(wy - y, wx - x, curses.ACS_BLOCK)
+                self.wind.addch(wy - y, wx - x, curses.ACS_BLOCK, curses.color_pair(point.color))
             except Exception:
                 pass
 
         return wy - y, wx - x
 
-    def addPoint(self, x, y):
+    def addPoint(self, x, y, color = 0):
         "Create and add a point object to the points list"
-        self.points.append(Point(x, y))
+        self.points.append(Point(x, y, color))
 
     def increment(self, 
             amt : "Amount to increment by" = 1, 
@@ -115,3 +118,47 @@ class PointGraph:
             self._drawPoint(point, self.points, (mx, my), l)
 
         self.wind.refresh()
+
+class NumberGraph(PointGraph):
+    def add(self, num, color = 0):
+        self.points.append(Point(0, num, color))
+
+class MaxGraph(PointGraph):
+    def add(self, objs, param = "y", color = 0):
+        mx = 0
+
+        for obj in objs:
+            if type(obj) is int:
+                if obj > mx:
+                    mx = obj
+            else:
+                if getattr(obj, param) > mx:
+                    mx = getattr(obj, param)
+
+        self.points.append(Point(0, mx, color))
+
+class MinGraph(PointGraph):
+    def add(self, objs, param = "y", color = 0):
+        mn = 0
+        
+        for obj in objs:
+            if type(obj) is int:
+                if obj < mn:
+                    mn = obj
+            else:
+                if getattr(obj, param) < mn:
+                    mn = getattr(obj, param)
+
+        self.points.append(Point(0, mn, color))
+
+class PercentGraph(PointGraph):
+    def add(self, objs, outof, param = "y", color = 0):
+        sm = 0
+
+        for obj in objs:
+            if type(obj) is int:
+                sm += obj
+            else:
+                sm += getattr(obj, param)
+
+        self.points.append(Point(0, (sm / outof), color))
