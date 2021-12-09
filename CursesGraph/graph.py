@@ -47,8 +47,8 @@ class PointGraph:
     def _fit(self, 
             num : "Number to fit", 
             wd : "Window dimension for axis", 
-            mn : "Max of range", 
-            mx : "Min of range"):
+            mx : "Max of range", 
+            mn : "Min of range"):
         "Fit the number to the window"
 
         # formula from https://stats.stackexchange.com/a/281164
@@ -79,7 +79,7 @@ class PointGraph:
                 try:
                     self.wind.addch(wy - i, wx - x, curses.ACS_BLOCK, curses.color_pair(point.color))
                 except Exception:
-                    pass
+                    continue
         else:
             try:
                 self.wind.addch(wy - y, wx - x, curses.ACS_BLOCK, curses.color_pair(point.color))
@@ -114,8 +114,11 @@ class PointGraph:
         my, mx = self.wind.getmaxyx()
         self.wdim = (mx, my)
 
-        for point in self.points:
-            self._drawPoint(point, self.points, (mx, my), l)
+        pts = sorted(self.points)
+        pts.reverse()
+
+        for point in pts:
+            self._drawPoint(point, pts, (mx, my), l)
 
         self.wind.refresh()
 

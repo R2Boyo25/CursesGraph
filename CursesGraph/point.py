@@ -3,3 +3,9 @@ class Point:
         self.x = x
         self.y = y
         self.color = color
+    
+    def __str__(self):
+        return "({}, {})".format(self.x, self.y)
+    
+    def __gt__(self, o):
+        return self.y > o.y
