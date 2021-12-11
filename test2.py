@@ -16,9 +16,9 @@ def main(scr):
     #g = CursesGraph.PercentGraph(scr)
     g = CursesGraph.NumberGraph(scr)
 
-    while 1:
-        g.add(random.randrange(1, 11), color = 3)
-        g.add(random.randrange(1, 11), color = 1)
+    for i in range(1, 201):
+        g.add(i, color = 3)
+        g.add(i/2, color = 1)
 
         g.increment()
         g.draw()

@@ -9,7 +9,7 @@ class PointGraph:
             points : "Points list (List of Point objects)" = []):
         curses.use_default_colors()
         for i in range(0, curses.COLORS):
-            curses.init_pair(i, i, -1)
+            curses.init_pair(i, i, i)
         self.wind = wind
         self.points = points
         self.wdim = (10, 10)
