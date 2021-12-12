@@ -30,7 +30,7 @@ class PointGraph:
             points : "Points List", 
             axis : "Axis to get, x or y" = "y"):
         "Get min of list of points on axis axis"
-        curmin = 0
+        curmin = points[0].y
 
         for point in points:
             if point.y < curmin:
