@@ -6,12 +6,12 @@ class PointGraph:
 
     def __init__(self, 
             wind : "Window to draw to", 
-            points : "Points list (List of Point objects)" = []):
+            points : "Points list (List of Point objects)" = None):
         curses.use_default_colors()
         for i in range(0, curses.COLORS):
             curses.init_pair(i, i, i)
         self.wind = wind
-        self.points = points
+        self.points = points if points else []
         self.wdim = (10, 10)
 
     def _getMax(self, 
